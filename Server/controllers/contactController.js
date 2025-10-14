@@ -1,4 +1,3 @@
-import express from "express";
 import Contact from "../models/Contact.js"; 
 
 export const newContact = async (req, res) => {

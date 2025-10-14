@@ -16,7 +16,9 @@ const app = express();
 
 
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(express.json()); // important
+
 
 
 mongoose.connect(process.env.MONGODB_URI)

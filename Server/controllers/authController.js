@@ -17,21 +17,55 @@ const transporter = nodemailer.createTransport({
 //Register Controller
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
+    if (!name || !email || !password || !confirmPassword) {
+      return res.status(400).json({ msg: "Please enter all fields" });
+    }
+    if (password.length < 10) {
+      return res.status(400).json({ msg: "Password must be at least 10 characters" });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ msg: "Passwords do not match" });
+    }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ msg: "Email already registered" });
+    }
     const hashed = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashed });
-    res.json({ msg: "User registered successfully", user });
+    res.status(201).json({ msg: "User registered successfully", user });
   } catch (error) {
-    res
-      .status(400)
-      .json({ msg: "Error registering user", error: error.message });
+    console.error(" Register error:", error);
+    res.status(500).json({ msg: "Internal server error", error: error.message });
   }
 };
+
+// export const register = async (req, res) => {
+//   try {
+//     const { name, email, password,confirmPassword } = req.body;
+//     const hashed = await bcrypt.hash(password, 10);
+//     const user = await User.create({ name, email, password: hashed,confirmPassword });
+//     res.json({ msg: "User registered successfully", user });
+//   } catch (error) {
+//     res
+//       .status(400)
+//       .json({ msg: "Error registering user", error: error.message });
+//   }
+//   if (!name || !email || !password || !confirmPassword) {
+//     return res.status(400).json({ msg: "Please enter all fields" });
+//   }
+//   if (password.length < 10) {
+//     return res
+//       .status(400)
+//       .json({ msg: "Password must be at least 10 characters" });
+//   }
+
+// };
 
 //Login Controller
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const {email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
       return res.json({ msg: "User not found" });
