@@ -65,30 +65,41 @@ export const register = async (req, res) => {
 //Login Controller
 export const login = async (req, res) => {
   try {
-    const {email, password } = req.body;
+    const { email, password } = req.body;
+    console.log("Login request received:", req.body);
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({ msg: "User not found" });
+      console.log("❌ User not found:", email);
+      return res.status(404).json({ msg: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.json({ msg: "Invalid credentials" });
+      console.log("❌ Invalid password for:", email);
+      return res.status(401).json({ msg: "Invalid credentials" });
     }
 
+    // 🧠 Add this line to make sure secret exists
+    if (!process.env.JWT_SECRET) {
+      console.error("❌ JWT_SECRET not set in .env file!");
+      return res.status(500).json({ msg: "Server misconfiguration" });
+    }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-    res.json({ msg: "Login successful", token });
-
-
-  } catch (error) {    
-    res.status(500).json({ msg: "Error logging in", error: error.message });  
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.status(200).json({
+      msg: "Login successful",
+      email: user.email,
+      name: user.name,
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: "Error logging in", error: error.message });
   }
 };
+
 
 //Send OTP
 export const sendOTP = async (req, res) => {

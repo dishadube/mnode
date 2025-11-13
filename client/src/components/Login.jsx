@@ -1,25 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { UserContext } from "../context/UserContext";
 
 function LoginForm() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const { setFormData } = useContext(UserContext);
+
+  const [localFormData, setLocalFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
 
-  const { email, password } = formData;
+  const { email, password } = localFormData;
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setLocalFormData({ ...localFormData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please enter all fields");
+      toast.warn("Please enter all fields");
       return;
     }
 
@@ -33,28 +36,32 @@ function LoginForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.msg || "Login failed");
+        toast.error(data.msg || "Login failed");
         return;
       }
 
-      console.log("✅ Login successful:", data);
-      setError(null);
-      navigate("/dashboard"); // Redirect after successful login
+     
+      toast.success("Login successful!");
+
+   
+      setFormData({ email: data.email || email, token: data.token });
+      setTimeout(() => {
+        navigate("/profilePage");
+      }, 1500); 
+
     } catch (err) {
-      console.error(" Login error:", err);
-      setError("Something went wrong. Please try again.");
+      console.error(err);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Login
         </h2>
-        {error && (
-          <p className="text-red-500 text-center mb-4">{error}</p>
-        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -79,6 +86,7 @@ function LoginForm() {
             Login
           </button>
         </form>
+
         <p className="text-center mt-4 text-gray-600">
           Don't have an account?{" "}
           <span
@@ -88,9 +96,17 @@ function LoginForm() {
             Sign Up
           </span>
         </p>
+        <p className="text-center mt-4 text-gray-600">
+          <span
+            className="text-blue-500 cursor-pointer hover:underline"
+            onClick={() => navigate("/forgetpassword")}
+          >
+            Forget Password?
+          </span>
+        </p>  
       </div>
     </div>
   );
 }
-
 export default LoginForm;
+
