@@ -1,26 +1,18 @@
-import Blog from '../models/Blog.js';
-
+import Blog from "../models/Blog.js";
 
 export const createBlog = async (req, res) => {
-    try {
-        const { title, content, author } = req.body;
-        const blog = await Blog.create({ title, content, author });
-        res.json({ msg: "Blog created successfully", blog });
-    } catch (error) {
-        res.status(400).json({ msg: "Error creating blog", error: error.message });
-    }
+  try {
+    const { title, content, author } = req.body;
+    if (!title || !content || !author) return res.status(400).json({ msg: "Missing fields" });
+    const blog = await Blog.create({ title, content, author });
+    res.status(201).json({ blog });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
 };
 
 
-export const getBlogs = async (req, res) => {
+export const getBlog = async (req, res) => {
     const blogs = await Blog.find().populate('author', 'name email');
     res.json(blogs);
 };
-
-//blogController.js
-
-
-
-
-
-

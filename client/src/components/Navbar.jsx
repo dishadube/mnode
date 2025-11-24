@@ -54,6 +54,7 @@ const Navbar = () => {
             <Link to="/home" className={getLinkClasses("/home", location.pathname)} >Home</Link>
             <Link to="/about" className={getLinkClasses("/about", location.pathname)}>About</Link>
             <Link to="/contact" className={getLinkClasses("/contact", location.pathname)}>Contact</Link>
+             <Link to="/blog" className={getLinkClasses("/contact", location.pathname)}>Blog</Link>
             {formData && <Link to="/dashboard" className={getLinkClasses("/dashboard", location.pathname)}>Dashboard</Link>}
             
             <Link to="/studentform" className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-500 transition-colors shadow-md no-underline">
@@ -102,6 +103,7 @@ const Navbar = () => {
           <Link to="/home" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-200 hover:bg-gray-700 no-underline">Home</Link>
           <Link to="/about" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-200 hover:bg-gray-700 no-underline">About</Link>
           <Link to="/contact" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-200 hover:bg-gray-700 no-underline">Contact</Link>
+           <Link to="/blog" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-base font-medium text-gray-200 hover:bg-gray-700 no-underline">Blog</Link>
           
           <hr className="border-gray-700 my-2" />
 

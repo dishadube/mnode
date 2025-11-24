@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import SignupForm from './components/Signup'
 import StudentForm from './components/Studentform'
 import Contact from './components/Contact'
+import Blog from './components/Blog'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
 import About from './components/About'
@@ -16,6 +17,7 @@ import ForgetPassword from './components/ForgetPassword'
 import { ToastContainer } from 'react-toastify'
 import UserSettings from './components/UserSettings'
 import { UserProvider } from './context/UserContext'
+import Blogs from './components/Blogs'
 
 
 
@@ -51,6 +53,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/studentform" element={<StudentForm />} />
             <Route path="/contact" element={<Contact/>} />
+            <Route path="/blog" element={<Blog/>} />
+            <Route path="/blogs" element={<Blogs/>} />
             <Route path="/allstudentdetails" element={<AllstudentDetails/>} />
           </Routes>
         </div>
