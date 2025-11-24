@@ -65,7 +65,13 @@ const app = express();
 
 verifyTransporter(); // Now EMAIL_USER & PASS exist ✔️
 
-app.use(cors());
+app.use(cors(
+  { origin: 'https://mnode-one.vercel.app/' ,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  } // Adjust as needed for security
+
+));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI)
